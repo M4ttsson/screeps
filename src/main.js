@@ -13,18 +13,26 @@ module.exports.loop = function () {
     }
 
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
+    var miners = _.filter(Game.creeps, (creep) => creep.memory.role == 'miner');
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
     var constructionSites = Game.spawns['Spawn1'].room.find(FIND_MY_CONSTRUCTION_SITES);
     //console.log('Harvesters: ' + harvesters.length);
 
-    if(harvesters.length < 2) { // TODO: State spawning
-        var newName = 'Harvester' + Game.time;
-        console.log('Spawning new harvester: ' + newName);
-        Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
-            {memory: {role: 'harvester'}});
+    if (miners < 3) {
+        var newName = 'Miner' + Game.time;
+        console.log('Spawning new miner: ' + newName);
+
+        var body = [WORK, CARRY, MOVE];
+        if (Game.spawns['Spawn1'].memory.trueMiner) {
+            body = [WORK, WORK, MOVE];
+            Game.spawns['Spawn1'].memory.trueMiner = false;
+        }
+
+        Game.spawns['Spawn1'].spawnCreep(body, newName,
+            {memory: {role: 'miner'}});
     }
-    else if(upgraders.length < 1) {
+    /* else if(upgraders.length < 1) {
         var newName = 'Upgrader' + Game.time;
         console.log('Spawning new upgrader: ' + newName);
         Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
@@ -36,7 +44,8 @@ module.exports.loop = function () {
         console.log('Spawning new builder: ' + newName);
         Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
             {memory: {role: 'builder'}});
-    }
+    } */
+    
 
     if(Game.spawns['Spawn1'].spawning) {
         var spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning.name];
@@ -46,6 +55,8 @@ module.exports.loop = function () {
             Game.spawns['Spawn1'].pos.y,
             {align: 'left', opacity: 0.8});
     }
+
+
 
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];

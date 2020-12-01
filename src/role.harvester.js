@@ -5,7 +5,7 @@ var roleHarvester = {
 
         if (creep.memory.harvesting && creep.store.getFreeCapacity() == 0) {
             creep.memory.harvesting = false;
-            creep.say('🚌 transporting')
+            creep.say('🚌 transp')
         }
         if (!creep.memory.harvesting && creep.store.getFreeCapacity() > 0) {
             creep.memory.harvesting = true;

@@ -15,6 +15,7 @@ module.exports.loop = function () {
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
+    var constructionSites = Game.spawns['Spawn1'].room.find(FIND_MY_CONSTRUCTION_SITES);
     //console.log('Harvesters: ' + harvesters.length);
 
     if(harvesters.length < 2) { // TODO: State spawning
@@ -30,7 +31,7 @@ module.exports.loop = function () {
             {memory: {role: 'upgrader'}});
     }
     // Only spawn if anything to build
-    else if(Game.constructionSites.length > 0 && builders.length < 1) {
+    else if(constructionSites.length > 0 && builders.length < 1) {
         var newName = 'Builder' + Game.time;
         console.log('Spawning new builder: ' + newName);
         Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,

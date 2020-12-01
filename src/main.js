@@ -5,6 +5,16 @@ var roleBuilder = require('role.builder');
 
 module.exports.loop = function () {
 
+    var spawn = Game.spawns['Spawn1'];
+    var sources = Game.spawns['Spawn1'].room.find(FIND_SOURCES);
+
+    var left = { x: sources[0].pos.x - 1, y: sources[0].pos.y};
+    var down = { x: sources[0].pos.x, y: sources[0].pos.y + 1};
+    var leftDown = { x: sources[0].pos.x - 1, y: sources[0].pos.y + 1};
+    spawn.room.createConstructionSite(left.x, left.y, STRUCTURE_CONTAINER);
+    spawn.room.createConstructionSite(down.x, down.y, STRUCTURE_CONTAINER);
+    spawn.room.createConstructionSite(leftDown.x, leftDown.y, STRUCTURE_CONTAINER);
+
     for(var name in Memory.creeps) {
         if(!Game.creeps[name]) {
             delete Memory.creeps[name];
@@ -24,7 +34,7 @@ module.exports.loop = function () {
         Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
             {memory: {role: 'harvester'}});
     }
-    else if(upgraders.length < 1) {
+    else if(upgraders.length < 2) {
         var newName = 'Upgrader' + Game.time;
         console.log('Spawning new upgrader: ' + newName);
         Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,

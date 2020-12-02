@@ -47,6 +47,11 @@ var roleBuilder = {
                             return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_CONTAINER) &&
                                 structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
                     }});
+                    if (targets > 0) {
+                        if(creep.harvest(targets[0]) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+                        }
+                    }
                 }
                 // final solution mine more
                 else {

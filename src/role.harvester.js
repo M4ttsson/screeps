@@ -7,7 +7,7 @@ var roleHarvester = {
             creep.memory.harvesting = false;
             creep.say('🚌 transp')
         }
-        if (!creep.memory.harvesting && creep.store.getFreeCapacity() > 0) {
+        if (!creep.memory.harvesting && !creep.memory.building && creep.store.getFreeCapacity() > 0) {
             creep.memory.harvesting = true;
             creep.say('🔄 harvest');
         }
@@ -27,12 +27,14 @@ var roleHarvester = {
                 }
             });
             if(targets.length > 0) {
+                creep.memory.building = false;
                 if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
             else { // build away 
-                var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+                creep.memory.building = true;
+                var targets = creep.room.find(FIND_CONSTRUCTION_SITES, { filter: { structureType: STRUCTURE_CONTAINER }} );
                 if(targets.length) {
                     if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});

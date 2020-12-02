@@ -6,9 +6,12 @@ var startup = require('startup');
 
 /* TODO: 
 1. Hitta närmaste source, skapa pos för angreppsytor och skapa containrar. status för när de är klara? 
+2. harvesters fyller spawn sen bygger containrar, 1 uppgrader
 2. När containrar är färdigbyggda, sluta med harvesters och skapa miners
 3. Skapa carriers som bär runt saker
 4. Därefter skapa builders vid behov.
+
+
 
 State machine för spawn
 State för skapa containrar
@@ -35,6 +38,7 @@ module.exports.loop = function () {
     var constructionSites = Game.spawns['Spawn1'].room.find(FIND_MY_CONSTRUCTION_SITES);
     //console.log('Harvesters: ' + harvesters.length);
 
+    // TODO antal harvesters = containers - 1
     if(harvesters.length < 2) { // TODO: State spawning
         var newName = 'Harvester' + Game.time;
         console.log('Spawning new harvester: ' + newName);

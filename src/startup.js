@@ -1,7 +1,7 @@
 
 var startup = {
 
-    containerLocations = [
+    containerLocations: [
         { x: -1, y: 0 },
         { x: 1, y: 0 },
         { x: 0, y: -1 },

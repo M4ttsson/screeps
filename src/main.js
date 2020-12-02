@@ -1,6 +1,6 @@
 
 var startup = require('startup');
-var creepSpawner = require('creepSpawner');
+var creepSpawner = require('creep.spawner');
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
@@ -36,11 +36,14 @@ module.exports.loop = function () {
     }
     if (!spawn.memory.miners) {
     // TODO: check so containers are done!
-        var containersToBuild = creep.room.find(FIND_CONSTRUCTION_SITES, { filter: { structureType: STRUCTURE_CONTAINER }} );
+        var containersToBuild = spawn.room.find(FIND_CONSTRUCTION_SITES, { filter: { structureType: STRUCTURE_CONTAINER }} );
         if (containersToBuild == 0) {
             spawn.memory.miners = true;
         }
     }
+
+    // spawn creepers
+    creepSpawner.spawnCreeps(spawn);
 
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];

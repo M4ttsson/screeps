@@ -1,5 +1,10 @@
 var roleBuilder = {
 
+    body() {
+        // TODO: should return better depending on control level
+        return [WORK, CARRY, MOVE]
+    },
+
     /** @param {Creep} creep **/
     run: function(creep) {
 

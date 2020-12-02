@@ -23,7 +23,14 @@ var creepSpawner = {
         if (!spawn.memory.spawncreep || spawn.memory.spawncreep === '') {
             if (spawn.memory.miners && miners.length < this.NumOfMiners) {
                 // spawn miners
-                spawn.memory.spawncreep = 'miner';
+
+                // check so capacity to spawn miner
+                var result = spawn.spawnCreep(roleMiner.body(), newName,
+                {memory: {role: 'miner'}, dryRun: true });
+                
+                if (result) {
+                    spawn.memory.spawncreep = 'miner';
+                }
             }
             else if (harvesters.length < this.NumOfHarvesters) {
                 // spawn harvesters

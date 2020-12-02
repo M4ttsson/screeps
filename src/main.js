@@ -2,24 +2,31 @@
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
+var startup = require('startup');
+
+/* TODO: 
+1. Hitta närmaste source, skapa pos för angreppsytor och skapa containrar. status för när de är klara? 
+2. När containrar är färdigbyggda, sluta med harvesters och skapa miners
+3. Skapa carriers som bär runt saker
+4. Därefter skapa builders vid behov.
+
+State machine för spawn
+State för skapa containrar
+*/
+
 
 module.exports.loop = function () {
-
-    var spawn = Game.spawns['Spawn1'];
-    var sources = Game.spawns['Spawn1'].room.find(FIND_SOURCES);
-
-    var left = { x: sources[0].pos.x - 1, y: sources[0].pos.y};
-    var down = { x: sources[0].pos.x, y: sources[0].pos.y + 1};
-    var leftDown = { x: sources[0].pos.x - 1, y: sources[0].pos.y + 1};
-    spawn.room.createConstructionSite(left.x, left.y, STRUCTURE_CONTAINER);
-    spawn.room.createConstructionSite(down.x, down.y, STRUCTURE_CONTAINER);
-    spawn.room.createConstructionSite(leftDown.x, leftDown.y, STRUCTURE_CONTAINER);
 
     for(var name in Memory.creeps) {
         if(!Game.creeps[name]) {
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory:', name);
         }
+    }
+
+    var spawn = Game.spawns[0];
+    if (!spawn.memory.initialized) {
+        startup.setupContainers(spawn);
     }
 
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
@@ -40,8 +47,8 @@ module.exports.loop = function () {
         Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
             {memory: {role: 'upgrader'}});
     }
-    // Only spawn if anything to build
-    else if(constructionSites.length > 0 && builders.length < 1) {
+    // Only spawn if anything to build // DISABLED
+    else if(constructionSites.length > 0 && builders.length < 0) {
         var newName = 'Builder' + Game.time;
         console.log('Spawning new builder: ' + newName);
         Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,

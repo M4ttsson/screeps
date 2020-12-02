@@ -27,7 +27,7 @@ module.exports.loop = function () {
         }
     }
 
-    var spawn = Game.spawns[0];
+    var spawn = Game.spawns['Spawn1'];
     if (!spawn.memory.initialized) {
         startup.setupContainers(spawn);
     }

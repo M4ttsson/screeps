@@ -1,13 +1,15 @@
 
+var startup = require('startup');
+var creepSpawner = require('creepSpawner');
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
-var startup = require('startup');
+var roleMiner = require('role.miner');
 
 /* TODO: 
 1. Hitta närmaste source, skapa pos för angreppsytor och skapa containrar. status för när de är klara? 
 2. harvesters fyller spawn sen bygger containrar, 1 uppgrader
-2. När containrar är färdigbyggda, sluta med harvesters och skapa miners
+2. När containrar är färdigbyggda, sluta med harvesters och skapa miners. Upptäck när det är dags att spawna ny pga död
 3. Skapa carriers som bär runt saker
 4. Därefter skapa builders vid behov.
 
@@ -30,46 +32,15 @@ module.exports.loop = function () {
     var spawn = Game.spawns['Spawn1'];
     if (!spawn.memory.initialized) {
         startup.setupContainers(spawn);
+        spawn.memory.miners = false;
     }
-
-    var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
-    var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
-    var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
-    var constructionSites = Game.spawns['Spawn1'].room.find(FIND_MY_CONSTRUCTION_SITES);
-    //console.log('Harvesters: ' + harvesters.length);
-
-    // TODO antal harvesters = containers - 1
-    if(harvesters.length < 2) { // TODO: State spawning
-        var newName = 'Harvester' + Game.time;
-        console.log('Spawning new harvester: ' + newName);
-        Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
-            {memory: {role: 'harvester'}});
+    if (!spawn.memory.miners) {
+    // TODO: check so containers are done!
+        var containersToBuild = creep.room.find(FIND_CONSTRUCTION_SITES, { filter: { structureType: STRUCTURE_CONTAINER }} );
+        if (containersToBuild == 0) {
+            spawn.memory.miners = true;
+        }
     }
-    else if(upgraders.length < 2) {
-        var newName = 'Upgrader' + Game.time;
-        console.log('Spawning new upgrader: ' + newName);
-        Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
-            {memory: {role: 'upgrader'}});
-    }
-    // Only spawn if anything to build // DISABLED
-    else if(constructionSites.length > 0 && builders.length < 0) {
-        var newName = 'Builder' + Game.time;
-        console.log('Spawning new builder: ' + newName);
-        Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
-            {memory: {role: 'builder'}});
-    }
-    
-
-    if(Game.spawns['Spawn1'].spawning) {
-        var spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning.name];
-        Game.spawns['Spawn1'].room.visual.text(
-            '🛠️' + spawningCreep.memory.role,
-            Game.spawns['Spawn1'].pos.x + 1,
-            Game.spawns['Spawn1'].pos.y,
-            {align: 'left', opacity: 0.8});
-    }
-
-
 
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
@@ -81,6 +52,9 @@ module.exports.loop = function () {
         }
         if(creep.memory.role == 'builder') {
             roleBuilder.run(creep);
+        }
+        if (creep.memory.role == 'miner') {
+            roleMiner.run(creep);
         }
     }
 }

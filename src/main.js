@@ -32,15 +32,14 @@ module.exports.loop = function () {
     var spawn = Game.spawns['Spawn1'];
     if (!spawn.memory.initialized) {
         startup.setupContainers(spawn);
-        spawn.memory.miners = false;
     }
-    if (!spawn.memory.miners) {
+/*     if (!spawn.memory.miners) {
     // TODO: check so containers are done!
         var containersToBuild = spawn.room.find(FIND_CONSTRUCTION_SITES, { filter: { structureType: STRUCTURE_CONTAINER }} );
         if (containersToBuild == 0) {
             spawn.memory.miners = true;
         }
-    }
+    } */
 
     // spawn creepers
     creepSpawner.spawnCreeps(spawn);

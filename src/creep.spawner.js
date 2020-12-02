@@ -8,39 +8,26 @@ var creepSpawner = {
 
     // TODO antal harvesters = containers - 1
     NumOfHarvesters: 2,
-    NumOfMiners: 3,
     NumOfUpgraders: 1,
     NumOfBuilders: 2,
     
     spawnCreeps(spawn) {
         var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
-        var miners = _.filter(Game.creeps, (creep) => creep.memory.role == 'miner');
         var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
         var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
         var constructionSites = spawn.room.find(FIND_MY_CONSTRUCTION_SITES);
 
 
         if (!spawn.memory.spawncreep || spawn.memory.spawncreep === '') {
-            if (spawn.memory.miners && miners.length < this.NumOfMiners) {
-                // spawn miners
-
-                // check so capacity to spawn miner
-                var result = spawn.spawnCreep(roleMiner.body(), newName,
-                {memory: {role: 'miner'}, dryRun: true });
-                
-                if (result == 0) {
-                    spawn.memory.spawncreep = 'miner';
-                }
-            }
-            if (harvesters.length < this.NumOfHarvesters && miners.length > 0) {
+            if (harvesters.length < this.NumOfHarvesters) {
                 // spawn harvesters
                 spawn.memory.spawncreep = 'harvester';
             }
-            if (upgraders.length < this.NumOfUpgraders) {
+            else if (upgraders.length < this.NumOfUpgraders) {
                 spawn.memory.spawncreep = 'upgrader';
             }
             // dont spawn builder before containers are built
-            if ((!spawn.memory.spawncreep || spawn.memory.spawncreep === '') && builders.length < this.NumOfBuilders && constructionSites.length > 0 && spawn.memory.miners) {
+            else if (builders.length < this.NumOfBuilders && constructionSites.length > 0) {
                 spawn.memory.spawncreep = 'builder';
             }
             if (spawn.memory.spawncreep != '') {

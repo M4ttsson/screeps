@@ -1,5 +1,5 @@
 let roomLogic = {
-    spawning:     require('./spawning'),
+    spawning:     require('./spawner'),
 }
 
 module.exports = roomLogic;

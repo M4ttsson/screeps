@@ -1,6 +1,6 @@
 
 # dont commit the secrets
-credentials.js
+.screeps.json
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,visualstudiocode,grunt

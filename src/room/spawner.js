@@ -11,6 +11,11 @@ function spawnCreeps(room) {
         return creepLogic[type].spawn(room);
     });
 
+    if (creepTypeNeeded == null) {
+        console.log('no creeps need to spawn');
+        return;
+    }
+
     // get the data for spawning a new creep of creepTypeNeeded
     let creepSpawnData = creepLogic[creepTypeNeeded] && creepLogic[creepTypeNeeded].spawnData(room);
     console.log(room, JSON.stringify(creepSpawnData));
@@ -21,11 +26,19 @@ function spawnCreeps(room) {
 
         // save that we are trying to spawn
         spawn.memory.needcreep = true;
-        let result = spawn.spawnCreep(creepSpawnData.body, creepSpawnData.name, {memory: creepSpawnData.memory});
-    
+        let result = spawn.spawnCreep(creepSpawnData.body, creepSpawnData.name, {
+            memory: creepSpawnData.memory
+        });
+
         console.log("Tried to Spawn:", creepTypeNeeded, result)
         if (result == OK) {
             spawn.memory.needcreep = false;
+
+            spawn.room.visual.text(
+                '🛠️' + creepSpawnData.memory,
+                spawn.pos.x + 1,
+                spawn.pos.y,
+                {align: 'left', opacity: 0.8});
         }
     }
 }

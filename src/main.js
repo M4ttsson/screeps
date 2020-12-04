@@ -3,10 +3,10 @@ let roomLogic = require('./room');
 let prototypes = require('./prototypes');
 
 
-module.exports.loop = function () {
-    
-    for(var name in Memory.creeps) {
-        if(!Game.creeps[name]) {
+module.exports.loop = function() {
+
+    for (var name in Memory.creeps) {
+        if (!Game.creeps[name]) {
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory:', name);
         }
@@ -17,9 +17,9 @@ module.exports.loop = function () {
 
     // run spawn logic for each room in our empire
     _.forEach(Game.myRooms, r => roomLogic.spawning(r));
-    
+
     // run each creep role see /creeps/index.js
-    for(var name in Game.creeps) {
+    for (var name in Game.creeps) {
         var creep = Game.creeps[name];
 
         let role = creep.memory.role;

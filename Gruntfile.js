@@ -1,4 +1,6 @@
 
+let mergeFiles = require('./grunt-scripts/merge-files');
+
 module.exports = function (grunt) {
     require('time-grunt')(grunt);
 
@@ -15,6 +17,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean')
     grunt.loadNpmTasks('grunt-contrib-copy')
     grunt.loadNpmTasks("grunt-jsbeautifier")
+
+    mergeFiles(grunt);
 
 	grunt.initConfig({
 		screeps: {
@@ -33,23 +37,16 @@ module.exports = function (grunt) {
             'dist': ['dist']
         },
 
-        // Copy all source files into the dist folder, flattening the folder structure by converting path delimiters to underscores
         copy: {
-            // Pushes the game code to the dist folder so it can be modified before being send to the screeps server.
-            screeps: {
-                files: [{
-                    expand: true,
-                    cwd: 'src/',
-                    src: '**',
-                    dest: 'dist/',
-                    filter: 'isFile',
-                    rename: function (dest, src) {
-                        // Change the path name utilize underscores for folders
-                        return dest + src.replace(/\//g,'_');
-                    }
-                }],
-            }
-        },
+			main: {
+				expand:  true,
+				flatten: true,
+				filter:  'isFile',
+				cwd:     'dist/',
+				src:     '**',
+				dest:    'Update This Path'
+			},
+		},
 
         // Apply code styling
         jsbeautifier: {
@@ -66,10 +63,12 @@ module.exports = function (grunt) {
        //             config: '.jsbeautifyrc'
                 }
             }
-        }
+        },
           
     });
-    grunt.registerTask('default',  ['clean', 'copy:screeps', 'screeps']);
+    grunt.registerTask('default',  ['clean', 'mergeFiles', 'screeps']);
+    grunt.registerTask('deploy',  ['clean', 'mergeFiles', 'screeps']);
     grunt.registerTask('test',     ['jsbeautifier:verify']);
     grunt.registerTask('pretty',   ['jsbeautifier:modify']);
+    grunt.registerTask('merge', 'mergeFiles');
 };

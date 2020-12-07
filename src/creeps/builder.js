@@ -31,8 +31,8 @@ var builder = {
     spawn: function(room) {
         var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder' && creep.room.name == room.name);
         var targets = room.find(FIND_CONSTRUCTION_SITES)
-        console.log('Builders: ' + builders.length, room.name);
-        console.log('Construction sites: ' + targets.length);
+//        console.log('Builders: ' + builders.length, room.name);
+//        console.log('Construction sites: ' + targets.length);
 
         if (builders.length < 1 && targets.length > 0) {
             return true;

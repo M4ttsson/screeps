@@ -41,7 +41,7 @@ var hauler = {
 
     spawn: function(room) {
         var haulers = _.filter(Game.creeps, (creep) => creep.memory.role == 'hauler' && creep.room.name == room.name);
-        console.log('Haulers: ' + haulers.length, room.name);
+    //    console.log('Haulers: ' + haulers.length, room.name);
 
         if (haulers.length < 1) {
             return true;

@@ -3,6 +3,7 @@ let creepLogic = {
     upgrader: require('./upgrader'),
     builder: require('./builder'),
     hauler: require('./hauler'),
+    repairer: require('./repairer')
 }
 
 module.exports = creepLogic;

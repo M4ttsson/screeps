@@ -1,32 +1,26 @@
 
-/* 
-Purpose: Repair walls, ramparts, roads. If no tower exists also repair buildings. 
-*/ 
+/*
+purpose: Repair towers, walls, ramparts, containers/storage then roads then everything else in that order.
+*/
 var repairer = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-        if (!creep.memory.hauling && creep.store.getFreeCapacity() == 0) {
-            creep.memory.hauling = true;
-            creep.say('🚌 hauling')
+        // TODO: Should fetch from store, not harvest!
+        if (creep.memory.repairing && creep.store[RESOURCE_ENERGY] == 0) {
+            creep.memory.repairing = false;
+            creep.say('🔄 resupply');
         }
-        if (creep.memory.hauling && creep.store.getUsedCapacity() == 0) {
-            creep.memory.hauling = false;
-            creep.say('🔄 fetching');
+        if (!creep.memory.repairing && creep.store.getFreeCapacity() == 0) {
+            creep.memory.repairing = true;
+            creep.say('🚧 repair');
         }
-        if (creep.memory.hauling) {
-            
-            // TODO: If enemy present, prioritize towers
-            var targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_TOWER) &&
-                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-                }
-            });
-            if (targets.length > 0) {
-                creep.memory.building = false;
-                if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0], {
+
+        if (creep.memory.repairing) {
+            let target = this.findClosestToRepair(creep);
+            if (target) {
+                if (creep.repair(target) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target, {
                         visualizePathStyle: {
                             stroke: '#ffffff'
                         }
@@ -35,24 +29,61 @@ var repairer = {
             }
         } 
         else {
-            creep.fetchEnergyFromContainer();
+            creep.fetchEnergy(true);
         }
     },
 
-    spawn: function(room) {
-        var haulers = _.filter(Game.creeps, (creep) => creep.memory.role == 'hauler' && creep.room.name == room.name);
-        console.log('Haulers: ' + haulers.length, room.name);
+    /** @param {Creep} creep **/
+    findClosestToRepair: function(creep) {
 
-        if (haulers.length < 1) {
+        // TODO: SORT BY RANGE!
+        let allBroken = creep.room.find(FIND_STRUCTURES, { filter: (s) => s.hits < s.hitsMax / 2 })
+        console.log(allBroken.length + " in need of repairs");
+
+        let target = _.find(allBroken, t => t.structureType == STRUCTURE_TOWER);
+
+        if(target) {
+            return target;
+        }
+
+        target = _.find(allBroken, t => t.structureType == STRUCTURE_WALL || t.structureType == STRUCTURE_RAMPART);
+        if (target) {
+            return target;
+        }
+
+        target = _.find(allBroken, t => t.structureType == STRUCTURE_CONTAINER || t.structureType == STRUCTURE_STORAGE);
+        if (target) {
+            return target;
+        }
+
+        // finally roads 
+        target = _.find(allBroken, t => t.structureType == STRUCTURE_ROAD);
+        if (target) {
+            return target;
+        }
+
+        // if nothing prioritized is needed, take the closest. 
+        target = creep.pos.findClosestByRange(FIND_STRUCTURES, {filter: (s) => s.hits < s.hitsMax });
+        return target;
+    },
+
+    // checks if the room needs to spawn a creep
+    spawn: function(room) {
+        var creeps = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer' && creep.room.name == room.name);
+        var targets = room.find(FIND_STRUCTURES, { filter: (s) => s.hits < s.hitsMax / 2 })
+        console.log('Repairers: ' + creeps.length, room.name);
+        console.log('Repair sites: ' + targets.length);
+
+        if (creeps.length < 1 && targets.length > 0) {
             return true;
         }
     },
     // returns an object with the data to spawn a new creep
     spawnData: function(room) {
-        let name = 'Hauler' + Game.time;
-        let body = [CARRY, CARRY, MOVE];
+        let name = 'Repairer' + Game.time;
+        let body = [WORK, CARRY, MOVE];
         let memory = {
-            role: 'hauler'
+            role: 'repairer'
         };
 
         return {
@@ -61,8 +92,6 @@ var repairer = {
             memory
         };
     }
-
-}
+};
 
 module.exports = repairer;
-

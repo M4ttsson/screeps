@@ -17,3 +17,9 @@ branch
 ptr
 
 
+# TODO
+* Logger, turn on and off debug logs
+* Static miner
+* Increase body types when RCL levels etc.
+* Despawn harvesters when static mining
+* Towers

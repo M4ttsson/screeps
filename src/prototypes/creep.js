@@ -2,6 +2,24 @@ Creep.prototype.sayHello = function sayHello() {
     this.say("Hello", true);
 }
 
+Creep.prototype.fetchEnergyFromContainer = function fetchEnergyFromContainer() {
+    var targets = this.room.find(FIND_STRUCTURES, {
+        filter: (structure) => {
+            return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) &&
+                structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+        }
+    });
+    if (targets.length > 0) {
+        if (this.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            this.moveTo(targets[0], {
+                visualizePathStyle: {
+                    stroke: '#ffaa00'
+                }
+            });
+        }
+    } 
+}
+
 Creep.prototype.fetchEnergy = function fetchEnergy(harvest) {
     // first check containers
     var targets = this.room.find(FIND_STRUCTURES, {
@@ -41,7 +59,7 @@ Creep.prototype.fetchEnergy = function fetchEnergy(harvest) {
             }
         }
          // if nothing else, harvest
-        else {
+        else if (harvest) {
             var sources = this.room.find(FIND_SOURCES);
             if (this.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
                 this.moveTo(sources[0], {

@@ -35,7 +35,7 @@ function spawnCreeps(room) {
             spawn.memory.needcreep = false;
 
             spawn.room.visual.text(
-                '🛠️' + creepSpawnData.memory,
+                '🛠️' + creepSpawnData.memory, // bug here, object object
                 spawn.pos.x + 1,
                 spawn.pos.y,
                 {align: 'left', opacity: 0.8});

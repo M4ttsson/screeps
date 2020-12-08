@@ -86,7 +86,7 @@ var repairer = {
         };
 
         let body = [];
-        if (room.energyCapacityAvailable < 400) {
+        if (room.energyCapacityAvailable < 450) {
             body.push(WORK);
             body.push(CARRY);
             body.push(MOVE);
@@ -95,7 +95,6 @@ var repairer = {
             body.push(WORK);
             body.push(CARRY);
             body.push(CARRY);
-            body.push(MOVE);
             body.push(MOVE);
             body.push(MOVE);
         }

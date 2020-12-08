@@ -46,13 +46,12 @@ var builder = {
         };
 
         let body = [];
-        if (room.energyCapacityAvailable < 500) {
+        if (room.energyCapacityAvailable < 450) {
             body.push(WORK);
             body.push(CARRY);
             body.push(MOVE);
         }
         else {
-            body.push(WORK);
             body.push(WORK);
             body.push(WORK);
             body.push(CARRY);

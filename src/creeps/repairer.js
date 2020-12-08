@@ -81,10 +81,24 @@ var repairer = {
     // returns an object with the data to spawn a new creep
     spawnData: function(room) {
         let name = 'Repairer' + Game.time;
-        let body = [WORK, CARRY, MOVE];
         let memory = {
             role: 'repairer'
         };
+
+        let body = [];
+        if (room.energyCapacityAvailable < 400) {
+            body.push(WORK);
+            body.push(CARRY);
+            body.push(MOVE);
+        }
+        else {
+            body.push(WORK);
+            body.push(CARRY);
+            body.push(CARRY);
+            body.push(MOVE);
+            body.push(MOVE);
+            body.push(MOVE);
+        }
 
         return {
             name,

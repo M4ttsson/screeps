@@ -41,10 +41,25 @@ var builder = {
     // returns an object with the data to spawn a new creep
     spawnData: function(room) {
         let name = 'Builder' + Game.time;
-        let body = [WORK, CARRY, MOVE];
         let memory = {
             role: 'builder'
         };
+
+        let body = [];
+        if (room.energyCapacityAvailable < 500) {
+            body.push(WORK);
+            body.push(CARRY);
+            body.push(MOVE);
+        }
+        else {
+            body.push(WORK);
+            body.push(WORK);
+            body.push(WORK);
+            body.push(CARRY);
+            body.push(CARRY);
+            body.push(MOVE);
+            body.push(MOVE);
+        }
 
         return {
             name,

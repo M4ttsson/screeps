@@ -49,13 +49,29 @@ var harvester = {
             return true;
         }
     },
+
     // returns an object with the data to spawn a new creep
+    /** @param {Room} room **/
     spawnData: function(room) {
         let name = 'Harvester' + Game.time;
-        let body = [WORK, CARRY, MOVE];
         let memory = {
             role: 'harvester'
         };
+
+        let body = [];
+        if (room.energyCapacityAvailable < 450) {
+            body.push(WORK);
+            body.push(CARRY);
+            body.push(MOVE);
+        }
+        else {
+            body.push(WORK);
+            body.push(WORK);
+            body.push(WORK);
+            body.push(CARRY);
+            body.push(MOVE);
+            body.push(MOVE);
+        }
 
         return {
             name,

@@ -50,7 +50,7 @@ var hauler = {
     // returns an object with the data to spawn a new creep
     spawnData: function(room) {
         let name = 'Hauler' + Game.time;
-        let body = [CARRY, CARRY, MOVE];
+        let body = [CARRY, CARRY, CARRY, MOVE, MOVE];
         let memory = {
             role: 'hauler'
         };

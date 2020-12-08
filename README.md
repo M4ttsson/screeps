@@ -23,3 +23,5 @@ ptr
 * Increase body types when RCL levels etc.
 * Despawn harvesters when static mining
 * Towers
+* Let builders repair when no construction sites (but don't spawn)
+* Store number of creeps in spawn memory

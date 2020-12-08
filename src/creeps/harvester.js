@@ -70,13 +70,16 @@ var harvester = {
     // returns an object with the data to spawn a new creep
     /** @param {Room} room **/
     spawnData: function(room) {
+
+        var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester' && creep.room.name == room.name);
         let name = 'Harvester' + Game.time;
         let memory = {
             role: 'harvester'
         };
 
         let body = [];
-        if (room.energyCapacityAvailable < 450) {
+        // spawn small if not capacity or lonely
+        if (room.energyCapacityAvailable < 450 || harvesters.length == 0) {
             body.push(WORK);
             body.push(CARRY);
             body.push(MOVE);

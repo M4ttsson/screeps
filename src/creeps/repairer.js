@@ -36,8 +36,8 @@ var repairer = {
     /** @param {Creep} creep **/
     findClosestToRepair: function(creep) {
 
-        // TODO: SORT BY RANGE!
-        let allBroken = creep.room.find(FIND_STRUCTURES, { filter: (s) => s.hits < s.hitsMax / 2 })
+        let allBroken = creep.room.find(FIND_STRUCTURES, { filter: (s) => s.hits < s.hitsMax / 2 });
+        allBroken = _.sortBy(allBroken, (b) => creep.pos.getRangeTo(b.pos));
         console.log(allBroken.length + " in need of repairs");
 
         let target = _.find(allBroken, t => t.structureType == STRUCTURE_TOWER);
@@ -46,14 +46,15 @@ var repairer = {
             return target;
         }
 
-        target = _.find(allBroken, t => t.structureType == STRUCTURE_WALL || t.structureType == STRUCTURE_RAMPART);
+        target = _.find(allBroken, t => t.structureType == STRUCTURE_CONTAINER || t.structureType == STRUCTURE_STORAGE);
         if (target) {
             return target;
         }
 
-        target = _.find(allBroken, t => t.structureType == STRUCTURE_CONTAINER || t.structureType == STRUCTURE_STORAGE);
-        if (target) {
-            return target;
+        let mostBroken = _.filter(t => t.structureType == STRUCTURE_WALL || t.structureType == STRUCTURE_RAMPART)
+        mostBroken = _.sortBy(mostBroken, (b) => [b.hits / b.hitsMax, creep.pos.getRangeTo(b.pos)]);
+        if (mostBroken.length > 0) {
+            return mostBroken[0];
         }
 
         // finally roads 

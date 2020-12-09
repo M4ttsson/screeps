@@ -24,7 +24,6 @@ var hauler = {
                 }
             });
             if (targets.length > 0) {
-                creep.memory.building = false;
                 if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[0], {
                         visualizePathStyle: {
@@ -35,7 +34,7 @@ var hauler = {
             }
         } 
         else {
-            creep.fetchEnergyFromContainer();
+            creep.fetchEnergyFromContainer(true);
         }
     },
 

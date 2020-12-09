@@ -1,9 +1,9 @@
 let creepLogic = {
     harvester: require('./harvester'),
     upgrader: require('./upgrader'),
-    builder: require('./builder'),
     hauler: require('./hauler'),
-    repairer: require('./repairer')
+    repairer: require('./repairer'),
+    builder: require('./builder'),
 }
 
 module.exports = creepLogic;

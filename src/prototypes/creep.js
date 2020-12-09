@@ -2,7 +2,24 @@ Creep.prototype.sayHello = function sayHello() {
     this.say("Hello", true);
 }
 
-Creep.prototype.fetchEnergyFromContainer = function fetchEnergyFromContainer() {
+Creep.prototype.fetchEnergyFromContainer = function fetchEnergyFromContainer(dropped) {
+    
+    if (dropped) {
+        // TODO: doublecheck so this works!
+        let droppedEnergy = this.pos.findClosestByRange(FIND_DROPPED_RESOURCES, (r) => r.resourceType == RESOURCE_ENERGY);
+        if (droppedEnergy) {
+            if (this.withdraw(droppedEnergy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                console.log('fetching dropped energy');
+                this.moveTo(droppedEnergy, {
+                    visualizePathStyle: {
+                        stroke: '#ffaa00'
+                    }
+                });
+            }
+            return;
+        }
+    }
+
     var targets = this.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
             return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) &&
@@ -19,6 +36,7 @@ Creep.prototype.fetchEnergyFromContainer = function fetchEnergyFromContainer() {
         }
     } 
 }
+
 
 Creep.prototype.fetchEnergy = function fetchEnergy(harvest) {
     // first check containers
@@ -56,10 +74,11 @@ Creep.prototype.fetchEnergy = function fetchEnergy(harvest) {
                         }
                     });
                 }
+                return;
             }
         }
          // if nothing else, harvest
-        else if (harvest) {
+        if (harvest) {
             var sources = this.room.find(FIND_SOURCES);
             if (this.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
                 this.moveTo(sources[0], {

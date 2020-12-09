@@ -6,7 +6,7 @@ Creep.prototype.fetchEnergyFromContainer = function fetchEnergyFromContainer(dro
     
     if (dropped) {
         // TODO: doublecheck so this works!
-        let droppedEnergy = this.pos.findClosestByRange(FIND_DROPPED_RESOURCES, (r) => r.resourceType == RESOURCE_ENERGY);
+        let droppedEnergy = this.pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: (r) => r.resourceType == RESOURCE_ENERGY });
         if (droppedEnergy) {
             if (this.withdraw(droppedEnergy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 console.log('fetching dropped energy');
@@ -17,6 +17,20 @@ Creep.prototype.fetchEnergyFromContainer = function fetchEnergyFromContainer(dro
                 });
             }
             return;
+        }
+        else {
+            let tombstone = this.pos.findClosestByRange(FIND_TOMBSTONES, { filter: (t) => t.store.getUsedCapacity(RESOURCE_ENERGY) > 0 });
+            if (tombstone) {
+                if (this.withdraw(tombstone, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    console.log('fetching tombstone energy');
+                    this.moveTo(tombstone, {
+                        visualizePathStyle: {
+                            stroke: '#ffaa00'
+                        }
+                    });
+                }
+                return;
+            }
         }
     }
 

@@ -59,7 +59,7 @@ function repairStructures(tower) {
         return false;
     }
 
-    var damagedStruct = tower.pos.findClosestByRange(FIND_STRUCTURES, { filter: (c) => (c.structureType != STRUCTURE_WALL || c.structureType != STRUCTURE_RAMPART || c.structureType != STRUCTURE_ROAD) && c.hits < c.hitsMax / 2})
+    var damagedStruct = tower.pos.findClosestByRange(FIND_STRUCTURES, { filter: (c) => (c.structureType != STRUCTURE_WALL && c.structureType != STRUCTURE_RAMPART && c.structureType != STRUCTURE_ROAD) && c.hits < c.hitsMax / 2})
     if (damagedStruct) {
         let res = tower.repair(damagedStruct);
         console.log("repaired structure " + res);

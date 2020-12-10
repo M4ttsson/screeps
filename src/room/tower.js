@@ -65,6 +65,15 @@ function repairStructures(tower) {
         console.log("repaired structure " + res);
         return true;
     }
+    else {
+        // check if anything is below 1% 
+        let brokenStruct = tower.pos.findClosestByRange(FIND_STRUCTURES, { filter: (c) => c.hits < c.hitsMax * 0.01})
+        if (brokenStruct) {
+            let res = tower.repair(brokenStruct);
+            console.log("tower repaired structure " + res);
+            return true;
+        }
+    }
     return false;
 }
 

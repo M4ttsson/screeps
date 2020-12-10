@@ -2,6 +2,51 @@ Creep.prototype.sayHello = function sayHello() {
     this.say("Hello", true);
 }
 
+Creep.prototype.findClosestToRepair = function findClosestToRepair() {
+
+    let allBroken = this.room.find(FIND_STRUCTURES, { filter: (s) => s.hits < s.hitsMax});
+    allBroken = _.sortBy(allBroken, (b) => this.pos.getRangeTo(b.pos));
+    console.log(allBroken.length + " in need of repairs");
+
+    // TODO: figure out why _.find does not work!
+    let towers = _.filter(allBroken, (t) => t.structureType == STRUCTURE_TOWER); 
+    if(towers.length > 0) {
+        return towers[0];
+    }
+
+    let containers = _.filter(allBroken, t => t.structureType == STRUCTURE_CONTAINER && t.hits < t.hitsMax / 2);
+    if (containers.length > 0) {
+        return containers[0];
+    }
+
+    // repair up to 1 %
+    let mostBrokenRamp = _.filter(allBroken, t => t.structureType == STRUCTURE_RAMPART && t.hits < t.hitsMax * 0.01);
+    if (mostBrokenRamp.length > 0) {
+        mostBrokenRamp = _.sortBy(mostBrokenRamp, (b) => [b.hits / b.hitsMax, this.pos.getRangeTo(b.pos)]);
+        return mostBrokenRamp[0];
+    }
+
+    // repair up to 1 %
+    let mostBroken = _.filter(allBroken, t => t.structureType == STRUCTURE_WALL && t.hits < t.hitsMax * 0.01);
+    if (mostBroken.length > 0) {
+        mostBroken = _.sortBy(mostBroken, (b) => [b.hits / b.hitsMax, this.pos.getRangeTo(b.pos)]);
+        return mostBroken[0];
+    }
+
+    // finally roads 
+    let roads = _.filter(allBroken, t => t.structureType == STRUCTURE_ROAD && t.hits < t.hitsMax / 2);
+    if (roads.length > 0) {
+        return roads[0];
+    }
+
+    // if nothing prioritized is needed, take the closest and finish. 
+    if (allBroken.length > 0) {
+        let target = allBroken[0];
+        console.log("Finishing repairing " + target.structureType + "  " + target.hits + "/" + target.hitsMax);
+        return target;
+    }
+}
+
 Creep.prototype.fetchEnergyFromContainer = function fetchEnergyFromContainer(dropped) {
     
     if (dropped) {

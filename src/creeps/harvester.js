@@ -26,7 +26,7 @@ var harvester = {
             if (haulers.length > 0) {
                 let closestContainer = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (s) => s.structureType == STRUCTURE_CONTAINER && s.store.getFreeCapacity(RESOURCE_ENERGY) > 0});
                 if (closestContainer) {
-                    console.log("Dropping at closest container");
+             //       console.log("Dropping at closest container");
                     if (creep.transfer(closestContainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(closestContainer, {
                             visualizePathStyle: {
@@ -62,7 +62,7 @@ var harvester = {
         var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester' && creep.room.name == room.name);
    //     console.log('Harvesters: ' + harvesters.length, room.name);
 
-        if (harvesters.length < 2) {
+        if (harvesters.length < room.memory.numOfHarvesters) {
             return true;
         }
     },

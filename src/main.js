@@ -17,6 +17,7 @@ module.exports.loop = function() {
 
     // run spawn & tower logic for each room in our empire
     _.forEach(Game.myRooms, r => {
+        roomLogic.setCreepNumber(r);
         roomLogic.spawning(r);
         roomLogic.towerLogic(r);
     });

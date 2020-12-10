@@ -39,10 +39,10 @@ var repairer = {
     spawn: function(room) {
         var creeps = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer' && creep.room.name == room.name);
         var targets = room.find(FIND_STRUCTURES, { filter: (s) => s.hits < s.hitsMax / 2 })
-        console.log('Repairers: ' + creeps.length, room.name);
-        console.log('Repair sites: ' + targets.length);
+    //    console.log('Repairers: ' + creeps.length, room.name);
+    //    console.log('Repair sites: ' + targets.length);
 
-        if (creeps.length < 2 && targets.length > 0) {
+        if (creeps.length < room.memory.numOfRepairers && targets.length > 0) {
             return true;
         }
     },

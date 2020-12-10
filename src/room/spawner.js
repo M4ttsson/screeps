@@ -1,6 +1,7 @@
 let creepLogic = require("../creeps/index");
 let creepTypes = _.keys(creepLogic);
 
+/** @param {Room} room **/
 function spawnCreeps(room) {
 
     // lists all the creep types to console

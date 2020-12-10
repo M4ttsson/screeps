@@ -47,7 +47,7 @@ var builder = {
 //        console.log('Builders: ' + builders.length, room.name);
 //        console.log('Construction sites: ' + targets.length);
 
-        if (builders.length < 1 && targets.length > 0) {
+        if (builders.length < room.memory.numOfBuilders && targets.length > 0) {
             return true;
         }
     },

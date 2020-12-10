@@ -6,7 +6,7 @@ Creep.prototype.findClosestToRepair = function findClosestToRepair() {
 
     let allBroken = this.room.find(FIND_STRUCTURES, { filter: (s) => s.hits < s.hitsMax});
     allBroken = _.sortBy(allBroken, (b) => this.pos.getRangeTo(b.pos));
-    console.log(allBroken.length + " in need of repairs");
+   // console.log(allBroken.length + " in need of repairs");
 
     // TODO: figure out why _.find does not work!
     let towers = _.filter(allBroken, (t) => t.structureType == STRUCTURE_TOWER); 
@@ -29,7 +29,7 @@ Creep.prototype.findClosestToRepair = function findClosestToRepair() {
     // repair up to 1 %
     let mostBroken = _.filter(allBroken, t => t.structureType == STRUCTURE_WALL && t.hits < t.hitsMax * 0.01);
     if (mostBroken.length > 0) {
-        mostBroken = _.sortBy(mostBroken, (b) => [b.hits / b.hitsMax, this.pos.getRangeTo(b.pos)]);
+        mostBroken = _.sortBy(mostBroken, (b) => this.pos.getRangeTo(b.pos));
         return mostBroken[0];
     }
 

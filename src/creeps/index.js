@@ -4,7 +4,7 @@ let creepLogic = {
     hauler: require('./hauler'),
     repairer: require('./repairer'),
     builder: require('./builder'),
-    remoteMiner: require('./remoteMiner'),
+  //  remoteMiner: require('./remoteMiner'),
 }
 
 module.exports = creepLogic;

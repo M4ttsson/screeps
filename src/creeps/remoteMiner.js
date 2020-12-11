@@ -1,6 +1,8 @@
 
 /*
 Purpose is to go to a distant source and static harvesting
+
+// TODO: Maybe replace harvesters at closest location as well?f
 */
 var remoteMiner = {
 
@@ -114,7 +116,6 @@ var remoteMiner = {
         };
 
         let body = [];
-        // spawn small if not capacity or lonely
         if (room.energyCapacityAvailable >= 600) {
             body.push(WORK);
             body.push(WORK);

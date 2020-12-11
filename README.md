@@ -18,12 +18,12 @@ ptr
 
 
 # TODO
-* Logger, turn on and off debug logs
 * Static miner
-* Despawn harvesters when static mining
+* When rcl==2, spawn first miner and build container
+
+* Logger, turn on and off debug logs
 * If enemy present, prioritize hauling to towers
 * Go to closest instead of 0
 * long distance harvesters that builds containers and repairs them. When done, spawn long distance haulers (faster)
 * Store targets in memory instead of calculating new every tick
 * Rewrite creep prototypes.
-* Store paths to remote locations etc

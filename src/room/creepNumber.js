@@ -12,8 +12,8 @@ function setCreepNumber(room) {
         switch (room.memory.rclLevel) {
             case 1:
                 console.log("two harvesters, one upgrader")
-                room.memory.numOfHarvesters = 2;
-                room.memory.numOfUpgraders = 1;
+               room.memory.numOfHarvesters = 2;
+               room.memory.numOfUpgraders = 1;
                 break;
 
             case 2: 

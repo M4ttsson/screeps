@@ -6,6 +6,7 @@ var hauler = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
+        
         if (!creep.memory.hauling && creep.store.getFreeCapacity() == 0) {
             creep.memory.hauling = true;
             creep.say('🚌 hauling')
@@ -34,6 +35,7 @@ var hauler = {
             }
         } 
         else {
+            
             creep.fetchEnergyFromContainer(true);
         }
     },

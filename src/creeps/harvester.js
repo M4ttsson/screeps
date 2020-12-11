@@ -11,10 +11,10 @@ var harvester = {
             creep.say('🔄 harvest');
         }
         if (creep.memory.harvesting) {
-            // TODO: go to closest source instead (or close and active)
-            var sources = creep.room.find(FIND_SOURCES);
-            if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0], {
+            
+            let source = Game.getObjectById(creep.room.memory.mainSource); // TODO: Set this somehow in order to have harvesters at both main and distanst?
+            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(source, {
                     visualizePathStyle: {
                         stroke: '#ffaa00'
                     }
@@ -44,7 +44,6 @@ var harvester = {
                     }
                 });
                 if (targets.length > 0) {
-                    creep.memory.building = false;
                     if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(targets[0], {
                             visualizePathStyle: {
@@ -74,7 +73,7 @@ var harvester = {
         var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester' && creep.room.name == room.name);
         let name = 'Harvester' + Game.time;
         let memory = {
-            role: 'harvester'
+            role: 'harvester',
         };
 
         let body = [];

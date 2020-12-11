@@ -24,3 +24,6 @@ ptr
 * If enemy present, prioritize hauling to towers
 * Go to closest instead of 0
 * long distance harvesters that builds containers and repairs them. When done, spawn long distance haulers (faster)
+* Store targets in memory instead of calculating new every tick
+* Rewrite creep prototypes.
+* Store paths to remote locations etc

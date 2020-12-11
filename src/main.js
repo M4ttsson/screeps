@@ -17,6 +17,7 @@ module.exports.loop = function() {
 
     // run spawn & tower logic for each room in our empire
     _.forEach(Game.myRooms, r => {
+        roomLogic.init(r);
         roomLogic.setCreepNumber(r);
         roomLogic.spawning(r);
         roomLogic.towerLogic(r);
@@ -24,9 +25,9 @@ module.exports.loop = function() {
 
     // run each creep role see /creeps/index.js
     for (var name in Game.creeps) {
-        var creep = Game.creeps[name];
-
+        let creep = Game.creeps[name];
         let role = creep.memory.role;
+       // console.log("creep " + name + " " + role);
         if (creepLogic[role]) {
             creepLogic[role].run(creep);
         }

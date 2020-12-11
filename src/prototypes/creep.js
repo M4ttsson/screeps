@@ -50,12 +50,28 @@ Creep.prototype.findClosestToRepair = function findClosestToRepair() {
 Creep.prototype.fetchEnergyFromContainer = function fetchEnergyFromContainer(dropped) {
     
     if (dropped) {
-        // TODO: doublecheck so this works!
-        let droppedEnergy = this.pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: (r) => r.resourceType == RESOURCE_ENERGY });
-        if (droppedEnergy) {
-            if (this.withdraw(droppedEnergy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                console.log('fetching dropped energy');
-                this.moveTo(droppedEnergy, {
+        // TODO: Check why this hangs when drop mining (obviously)
+
+        // console.log("runn3");
+        // // TODO: doublecheck so this works!
+        // let droppedEnergy = this.pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: (r) => r.resourceType == RESOURCE_ENERGY });
+        // if (droppedEnergy) {
+        //     if (this.withdraw(droppedEnergy, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        //         console.log('fetching dropped energy');
+        //         this.moveTo(droppedEnergy, {
+        //             visualizePathStyle: {
+        //                 stroke: '#ffaa00'
+        //             }
+        //         });
+        //     }
+        //     return;
+        // }
+
+        let tombstone = this.pos.findClosestByRange(FIND_TOMBSTONES, { filter: (t) => t.store.getUsedCapacity(RESOURCE_ENERGY) > 0 });
+        if (tombstone) {
+            if (this.withdraw(tombstone, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                console.log('fetching tombstone energy');
+                this.moveTo(tombstone, {
                     visualizePathStyle: {
                         stroke: '#ffaa00'
                     }
@@ -63,22 +79,8 @@ Creep.prototype.fetchEnergyFromContainer = function fetchEnergyFromContainer(dro
             }
             return;
         }
-        else {
-            let tombstone = this.pos.findClosestByRange(FIND_TOMBSTONES, { filter: (t) => t.store.getUsedCapacity(RESOURCE_ENERGY) > 0 });
-            if (tombstone) {
-                if (this.withdraw(tombstone, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    console.log('fetching tombstone energy');
-                    this.moveTo(tombstone, {
-                        visualizePathStyle: {
-                            stroke: '#ffaa00'
-                        }
-                    });
-                }
-                return;
-            }
-        }
+        
     }
-
     var targets = this.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
             return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) &&
@@ -138,9 +140,9 @@ Creep.prototype.fetchEnergy = function fetchEnergy(harvest) {
         }
          // if nothing else, harvest
         if (harvest) {
-            var sources = this.room.find(FIND_SOURCES);
-            if (this.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                this.moveTo(sources[0], {
+            let source = Game.getObjectById(this.room.memory.mainSource);
+            if (this.harvest(source) == ERR_NOT_IN_RANGE) {
+                this.moveTo(source, {
                     visualizePathStyle: {
                         stroke: '#ffaa00'
                     }

@@ -28,27 +28,38 @@ var remoteHauler = {
         if (creep.memory.hauling && !creep.memory.ready) {
             // go to storage, then containers, then spawn/extensions
             let possibleTargets = creep.room.find(FIND_STRUCTURES, { filter: (x) => { 
-                x.structureType == STRUCTURE_CONTAINER 
+                return (x.structureType == STRUCTURE_CONTAINER 
                 || x.structureType == STRUCTURE_STORAGE
                 || x.structureType == STRUCTURE_SPAWN 
-                || x.structureType == STRUCTURE_EXTENSION }});
+                || x.structureType == STRUCTURE_EXTENSION) 
+                && x.store.getFreeCapacity(RESOURCE_ENERGY) > 0; 
+                }
+            });
+            
+            console.log(possibleTargets.length + " of targets");
 
             let target = _.filter(possibleTargets, (struct) => struct.structureType == STRUCTURE_STORAGE);
             if (target.length > 0) {
+                console.log("Going to storage");
                 creep.memory.target = target[0].id;
                 creep.memory.ready = true;
             }
             else { // TODO: fix....
                 target = _.filter(possibleTargets, (struct) => struct.structureType == STRUCTURE_CONTAINER && struct.id != room.memory.remoteStorage);
                 if (target.length > 0) {
+                    console.log("Going to containers");
                     creep.memory.target = target[0].id; 
                     creep.memory.ready = true;
                 }
                 else {
                     target = _.filter(possibleTargets, (struct) => struct.structureType == STRUCTURE_SPAWN || struct.structureType == STRUCTURE_EXTENSION);
                     if (target.length > 0) {
+                        console.log("Going to spawn/extensions");
                         creep.memory.target = target[0].id;
                         creep.memory.ready = true;
+                    }
+                    else {
+                        console.log("No valid targets");
                     }
                 }
             }
@@ -62,8 +73,10 @@ var remoteHauler = {
         }
 
         if (creep.memory.ready) {
+            //console.log("creep ready to go");
             let targ = Game.getObjectById(creep.memory.target);
             if (creep.memory.hauling) {
+            //    console.log("creep ready to go haul");
                 if (creep.transfer(targ, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targ, { // TODO: Should move to common function
                         visualizePathStyle: {
@@ -73,7 +86,8 @@ var remoteHauler = {
                 }
             }
             else {
-                if (creep.withdraw(targ) == ERR_NOT_IN_RANGE) {
+           //     console.log("creep ready to go withdraw");
+                if (creep.withdraw(targ, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targ, {
                         visualizePathStyle: {
                             stroke: '#ffffff'
@@ -96,9 +110,10 @@ var remoteHauler = {
         if (remoteStorage) {
             if (remoteStorage.store) {
                 remoteStorageDone = true;
+                //console.log("remote storage done");
             }
         }
-        else if (remoteHaulers.length < room.memory.numOfRemoteHaulers && remoteStorageDone) {
+        if (remoteHaulers.length < room.memory.numOfRemoteHaulers && remoteStorageDone) {
             return true;
         }
     },
@@ -109,6 +124,7 @@ var remoteHauler = {
         let name = 'RemoteHauler' + Game.time;
         let memory = {
             role: 'remoteHauler',
+            hauling: false,
         };
 
         let body = [];

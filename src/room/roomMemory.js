@@ -11,7 +11,7 @@ function initMemory(room) {
         let spawn = room.find(FIND_MY_SPAWNS)[0];
         
         let sorted = _.sortBy(sources, (x) => { 
-            let path = spawn.pos.findPathTo(x.pos, { swampCost: 10 });
+            let path = spawn.pos.findPathTo(x.pos, { swampCost: 10 }); // TODO: Does not seem to work?
             console.log(path.length + " " + x.id);
             return path.length;
         });

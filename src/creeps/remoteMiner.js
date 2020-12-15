@@ -54,7 +54,7 @@ var remoteMiner = {
                 let storage = Game.getObjectById(creep.room.memory.remoteStorage);
                 if (storage.hits < storage.maxHits / 2) {
                     if (creep.store.getUsedCapacity() == 0) {
-                        if (creep.withdraw(storage) == ERR_NOT_ENOUGH_RESOURCES) {
+                        if (creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_ENOUGH_RESOURCES) {
                             creep.harvest(source);
                         }
                     }

@@ -29,7 +29,7 @@ var remoteMiner = {
 
         if (creep.memory.building) {
 
-            let site = Game.getObjectById(creep.room.memory.remoteStorage); // Todo: use room remotestorage and build if buildingsite
+            let site = Game.getObjectById(creep.room.memory.remoteStorage);
             if (!site || creep.build(site) != 0) {
                 // double check so it is finished and store in room memory
                 console.log("Remote storage done");

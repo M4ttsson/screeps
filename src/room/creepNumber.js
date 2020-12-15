@@ -33,12 +33,15 @@ function setCreepNumber(room) {
                 break;
 
             case 4:
-                console.log("two harvesters, two upgraders, one builder, one hauler, two repairer")
+                console.log("two harvesters, two upgraders, one builder, one hauler, two repairer, one remote pair")
                 room.memory.numOfHarvesters = 2;
                 room.memory.numOfUpgraders = 2;
                 room.memory.numOfBuilders = 1;
                 room.memory.numOfHaulers = 1;
                 room.memory.numOfRepairers = 2;
+
+                room.memory.numOfRemoteMiners = 1;
+                room.memory.numOfRemoteHaulers = 1;
                 break;
         
             default:

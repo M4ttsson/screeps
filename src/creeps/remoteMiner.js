@@ -8,6 +8,7 @@ var remoteMiner = {
 
     /** @param {Creep} creep **/
     buildContainer: function(creep, source) {
+        // TODO: Avoid spawning builder at main spawn
         let res = creep.pos.createConstructionSite(STRUCTURE_CONTAINER);
         if (res == 0) {
             console.log("Created construction site for container");
